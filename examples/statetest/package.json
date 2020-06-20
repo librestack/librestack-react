@@ -1,0 +1,48 @@
+{
+  "name": "statetest",
+  "version": "0.0.0",
+  "description": "example using redux",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src/*.ts",
+    "build": "npm run lint && tsc && webpack",
+    "tsc": "tsc",
+    "tscw": "tsc -w",
+    "httpd": "lite-server",
+    "start": "concurrently \"npm run tscw\" \"webpack -w\" \"npm run httpd\" ",
+    "clean": "rm -f src/*.js src/*.map",
+    "realclean": "npm run clean ; rm -f js/*"
+  },
+  "keywords": [],
+  "author": "Brett A C Sheffield <bacs@librecast.net> (http://brettsheffield.com/)",
+  "license": "GPL-2.0-or-later",
+  "browserslist": [
+    "defaults",
+    "Chrome >= 16",
+    "Firefox >=9",
+    "IE >= 10",
+    "Safari >= 6.2.8",
+    "maintained node versions"
+  ],
+  "devDependencies": {
+    "@babel/cli": "^7.10.1",
+    "@babel/core": "^7.10.2",
+    "@babel/polyfill": "^7.10.1",
+    "@babel/preset-env": "^7.10.2",
+    "@types/react": "^16.9.36",
+    "@typescript-eslint/eslint-plugin": "^3.2.0",
+    "@typescript-eslint/parser": "^3.2.0",
+    "babel-loader": "^8.1.0",
+    "concurrently": "^5.2.0",
+    "eslint": "^7.2.0",
+    "lite-server": "^2.5.4",
+    "typescript": "^3.9.5",
+    "uglify-js": "^3.9.4",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  },
+  "dependencies": {
+    "redux": "^4.0.5"
+  }
+}
