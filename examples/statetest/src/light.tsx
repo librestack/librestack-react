@@ -1,6 +1,5 @@
 import Component from './component';
 import { createElement } from './jsx';
-import Store from './store';
 
 class Light extends Component {
 	state = {
