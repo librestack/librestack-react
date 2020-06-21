@@ -99,7 +99,6 @@ function render(element: any, parentNode?: HTMLElement|null|undefined) {
 			}
 			else parentNode.append(element);		// new element
 		}
-		else console.log('unchanged');
 	}
 }
 
