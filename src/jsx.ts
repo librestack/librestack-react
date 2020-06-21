@@ -27,14 +27,29 @@ function createElement(type: any, config: {[index: string]:any} = {}, ...childre
 	switch (typeof type) {
 		case 'function': {		// Component
 			const t = new type(config);
+			if (config) {
+				if (createElement['ids'] === undefined) createElement['ids'] = [];
+				else createElement.ids.push(config.id);
+			}
 			t.props = (config) ? config : {};
 			return t.render();
 		}
 		case 'string':			// eg. 'div' => use to create element
 			break;
 		default:				// object
+			if (Array.isArray(type)) {
+				let child: any;
+				while ((child = type.shift()) !== undefined) {
+					child.id = createElement.ids.shift();
+					render(child, config.parentNode);
+				}
+			}
 			return type;
 	}
+	return createNode(type, config, children);
+}
+
+function createNode(type: string, config: {[index: string]:any} = {}, children: any) {
 	const element = document.createElement(type);
 	for (const key in config) { // apply attributes
 		if (key === 'className' && config[key] !== undefined)
@@ -66,10 +81,11 @@ function render(element: any, parentNode?: HTMLElement|null|undefined) {
 	// find old node, compare with new if exists, and insert/replace
 	if (element.id) { // has ID, use it to find element
 		const oldNode = document.getElementById(element.id);
-		if (oldNode && !oldNode.isEqualNode(element) && oldNode.parentNode)
+		if (oldNode && !oldNode.isEqualNode(element) && oldNode.parentNode) {
 			oldNode.parentNode.replaceChild(element, oldNode);
-		else // element has id, but not found, give up
-			console.error(`unable to find element with id=${element.id}`);
+			return;
+		}
+		else parentNode.append(element);			// new element
 	}
 	else { // no id, search through children of parent
 		let changed = true;
@@ -83,6 +99,7 @@ function render(element: any, parentNode?: HTMLElement|null|undefined) {
 			}
 			else parentNode.append(element);		// new element
 		}
+		else console.log('unchanged');
 	}
 }
 
