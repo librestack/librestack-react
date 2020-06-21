@@ -23,7 +23,13 @@ function realEvent(key: string) {
  * type: can be either a tag name string (such as 'div' or 'span'), a React
  * component type (a class or a function), or a React fragment type.
  */
-function createElement(type: any, config: {[index: string]:any} = {}, ...children: any) {
+
+interface ICreateElement {
+	(type: any, config?: { [index: string]: any; }, ...children: any): any,
+	ids?: string[];
+}
+const createElement: ICreateElement =
+	(type: any, config: {[index: string]:any} = {}, ...children: any) => {
 	switch (typeof type) {
 		case 'function': {		// Component
 			const t = new type(config);
@@ -39,7 +45,7 @@ function createElement(type: any, config: {[index: string]:any} = {}, ...childre
 		default:				// object
 			if (Array.isArray(type)) {
 				let child: any;
-				while ((child = type.shift()) !== undefined) {
+				while ((child = type.shift()) !== undefined && createElement.ids !== undefined) {
 					child.id = createElement.ids.shift();
 					render(child, config.parentNode);
 				}
