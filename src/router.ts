@@ -4,8 +4,10 @@
  *   <Route path="/blog" component={TopBar} />
  *   <Route path="/blog" render={ () => (<BlogOuter store={this.props.store} />)} />
  */
+import Component from './component';
 
-class Route {
+class Route extends Component {
+	props: any;
 	render () {
 		if (this.props.path === location.pathname) {
 			if (this.props.component) return this.props.component;
