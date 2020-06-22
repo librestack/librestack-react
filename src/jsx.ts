@@ -25,18 +25,13 @@ function realEvent(key: string) {
  */
 
 interface ICreateElement {
-	(type: any, config?: { [index: string]: any; }, ...children: any): any,
-	ids?: string[]
+	(type: any, config?: { [index: string]: any; }, ...children: any): any
 }
 const createElement: ICreateElement =
 	(type: any, config: {[index: string]:any} = {}, ...children: any) => {
 	switch (typeof type) {
 		case 'function': {		// Component
 			const t = new type(config);
-			if (config) {
-				if (createElement['ids'] === undefined) createElement['ids'] = [];
-				else createElement.ids.push(config.id);
-			}
 			t.props = (config) ? config : {};
 			return t.render();
 		}
@@ -45,8 +40,7 @@ const createElement: ICreateElement =
 		default:				// object
 			if (Array.isArray(type)) {
 				let child: any;
-				while ((child = type.shift()) !== undefined && createElement.ids !== undefined) {
-					child.id = createElement.ids.shift();
+				while ((child = type.shift()) !== undefined) {
 					render(child, config.parentNode);
 				}
 			}
