@@ -1,8 +1,34 @@
+/*
+ * The Typescript compiler will call our createElement() function to create the
+ * nodes.  Unlike React.js, we're not maintaining and diffing a virtual DOM. We
+ * simply create the required nodes directly.  In many cases, this is all you
+ * need.
+ *
+ * As we're watching state changes with enough specificity to know which
+ * components have changed state, we can avoid full diff re-renders, and only
+ * update those components that have changed state, and then compare the
+ * regenerated fragment to the existing DOM.
+ *
+ * Also, we avoid passing around props and lifting up state refactors by using a
+ * central state store, which is the most common React.js pattern anyway.
+ */
+
+/* convert a html property like 'onClick' to the real event name like 'click'
+ * Alternatively, could just add these raw events to the DetailedHTMLProps type */
 function realEvent(key: string) {
 	return 'click'; //FIXME - handle all events
 }
 
-function createElement(type: any, config: {[index: string]:any} = {}, ...children: any) {
+/*
+ * type: can be either a tag name string (such as 'div' or 'span'), a React
+ * component type (a class or a function), or a React fragment type.
+ */
+
+interface ICreateElement {
+	(type: any, config?: { [index: string]: any; }, ...children: any): any
+}
+const createElement: ICreateElement =
+	(type: any, config: {[index: string]:any} = {}, ...children: any) => {
 	switch (typeof type) {
 		case 'function': {		// Component
 			const t = new type(config);
@@ -12,8 +38,18 @@ function createElement(type: any, config: {[index: string]:any} = {}, ...childre
 		case 'string':			// eg. 'div' => use to create element
 			break;
 		default:				// object
+			if (Array.isArray(type)) {
+				let child: any;
+				while ((child = type.shift()) !== undefined) {
+					render(child, config.parentNode);
+				}
+			}
 			return type;
 	}
+	return createNode(type, config, children);
+}
+
+function createNode(type: string, config: {[index: string]:any} = {}, children: any) {
 	const element = document.createElement(type);
 	for (const key in config) { // apply attributes
 		if (key === 'className' && config[key] !== undefined)
@@ -25,6 +61,7 @@ function createElement(type: any, config: {[index: string]:any} = {}, ...childre
 				element.setAttribute(key, config[key]);
 		}
 	}
+	if (config && config.innerHTML !== undefined) element.innerHTML = config.innerHTML;
 	if (children) { // child nodes
 		if (!Array.isArray(children)) children = [ children ];
 		children.forEach((child: any) => {
@@ -45,10 +82,11 @@ function render(element: any, parentNode?: HTMLElement|null|undefined) {
 	// find old node, compare with new if exists, and insert/replace
 	if (element.id) { // has ID, use it to find element
 		const oldNode = document.getElementById(element.id);
-		if (oldNode && !oldNode.isEqualNode(element) && oldNode.parentNode)
+		if (oldNode && !oldNode.isEqualNode(element) && oldNode.parentNode) {
 			oldNode.parentNode.replaceChild(element, oldNode);
-		else // element has id, but not found, give up
-			console.error(`unable to find element with id=${element.id}`);
+			return;
+		}
+		else parentNode.append(element);			// new element
 	}
 	else { // no id, search through children of parent
 		let changed = true;
