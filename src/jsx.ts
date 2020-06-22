@@ -26,7 +26,7 @@ function realEvent(key: string) {
 
 interface ICreateElement {
 	(type: any, config?: { [index: string]: any; }, ...children: any): any,
-	ids?: string[];
+	ids?: string[]
 }
 const createElement: ICreateElement =
 	(type: any, config: {[index: string]:any} = {}, ...children: any) => {
@@ -67,6 +67,7 @@ function createNode(type: string, config: {[index: string]:any} = {}, children: 
 				element.setAttribute(key, config[key]);
 		}
 	}
+	if (config && config.innerHTML !== undefined) element.innerHTML = config.innerHTML;
 	if (children) { // child nodes
 		if (!Array.isArray(children)) children = [ children ];
 		children.forEach((child: any) => {
