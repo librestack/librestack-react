@@ -14,6 +14,15 @@ point.
 
 ## Install
 
+### via npm
+
+```
+# inside your project
+npm install @librestack/react --save-dev
+```
+
+### from github
+
 ```
 git clone git@github.com:librestack/librestack-react.git
 cd librestack-react

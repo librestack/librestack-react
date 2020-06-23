@@ -1,5 +1,6 @@
 node_modules/
 *.swp
+index.js
 js/
 src/*.map
 src/*.js

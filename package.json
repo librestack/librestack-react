@@ -1,8 +1,8 @@
 {
-  "name": "librestack-react",
+  "name": "@librestack/react",
   "version": "0.0.0",
   "description": "Build vanilla.js applications with Typescript and JSX (TSX)",
-  "private": true,
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src/*.ts",
