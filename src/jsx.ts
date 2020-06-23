@@ -72,7 +72,7 @@ function createNode(type: string, config: {[index: string]:any} = {}, children: 
 	return element;
 }
 
-function render(element: any, parentNode?: HTMLElement|null|undefined) {
+function render(element: any, parentNode?: HTMLElement|(Node & ParentNode)|null|undefined) {
 	if (!element) throw new Error('missing element to render');
 
 	// get parent node
