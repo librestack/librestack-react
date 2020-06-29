@@ -65,8 +65,11 @@ function createNode(type: string, config: {[index: string]:any} = {}, children: 
 	if (children) { // child nodes
 		if (!Array.isArray(children)) children = [ children ];
 		children.forEach((child: any) => {
-			(typeof child === 'string') || (child = createElement(child, { parentNode: element }, []));
-			element.append(child);
+			if (typeof child === 'string')
+				child = document.createTextNode(String(child));
+			else
+				child = createElement(child, { parentNode: element }, []);
+			element.appendChild(child);
 		});
 	}
 	return element;
@@ -86,7 +89,7 @@ function render(element: any, parentNode?: HTMLElement|(Node & ParentNode)|null|
 			oldNode.parentNode.replaceChild(element, oldNode);
 			return;
 		}
-		else parentNode.append(element);			// new element
+		else parentNode.appendChild(element);			// new element
 	}
 	else { // no id, search through children of parent
 		let changed = true;
@@ -98,7 +101,7 @@ function render(element: any, parentNode?: HTMLElement|(Node & ParentNode)|null|
 			if (parentNode.children.length > 0) {	// replace existing element
 				parentNode.replaceChild(element, parentNode.firstElementChild as Node);
 			}
-			else parentNode.append(element);		// new element
+			else parentNode.appendChild(element);		// new element
 		}
 	}
 }
