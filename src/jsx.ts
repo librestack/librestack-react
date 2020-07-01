@@ -90,7 +90,6 @@ function render(element: any, parentNode?: HTMLElement|(Node & ParentNode)|null|
 		const oldNode = document.getElementById(element.id);
 		if (oldNode && !oldNode.isEqualNode(element) && oldNode.parentNode) {
 			oldNode.parentNode.replaceChild(element, oldNode);
-			return;
 		}
 		else parentNode.appendChild(element);			// new element
 	}
@@ -110,7 +109,7 @@ function render(element: any, parentNode?: HTMLElement|(Node & ParentNode)|null|
 	// call componentDidMount() events
 	let f;
 	while (f = components.pop()) {
-		if (f !== undefined) f.componentDidMount();
+		if (f.componentDidMount !== undefined) f.componentDidMount();
 	}
 }
 
