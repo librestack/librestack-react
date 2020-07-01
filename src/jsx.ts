@@ -13,6 +13,8 @@
  * central state store, which is the most common React.js pattern anyway.
  */
 
+let components = []; // component stack
+
 /* convert a html property like 'onClick' to the real event name like 'click'
  * Alternatively, could just add these raw events to the DetailedHTMLProps type */
 function realEvent(key: string) {
@@ -33,6 +35,7 @@ const createElement: ICreateElement =
 		case 'function': {		// Component
 			const t = new type(config);
 			t.props = (config) ? config : {};
+			components.push(t);
 			return t.render();
 		}
 		case 'string':			// eg. 'div' => use to create element
@@ -103,6 +106,11 @@ function render(element: any, parentNode?: HTMLElement|(Node & ParentNode)|null|
 			}
 			else parentNode.appendChild(element);		// new element
 		}
+	}
+	// call componentDidMount() events
+	let f;
+	while (f = components.pop()) {
+		if (f !== undefined) f.componentDidMount();
 	}
 }
 
