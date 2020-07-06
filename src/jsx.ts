@@ -13,7 +13,7 @@
  * central state store, which is the most common React.js pattern anyway.
  */
 
-let components = []; // component stack
+let components:any = []; // component stack
 
 /* convert a html property like 'onClick' to the real event name like 'click'
  * Alternatively, could just add these raw events to the DetailedHTMLProps type */
@@ -72,7 +72,7 @@ function createNode(type: string, config: {[index: string]:any} = {}, children: 
 				child = document.createTextNode(String(child));
 			else
 				child = createElement(child, { parentNode: element }, []);
-			element.appendChild(child);
+			if (child instanceof Node) element.appendChild(child);
 		});
 	}
 	return element;
@@ -106,12 +106,15 @@ function render(element: any, parentNode?: HTMLElement|(Node & ParentNode)|null|
 			else parentNode.appendChild(element);		// new element
 		}
 	}
-	// call componentDidMount() events
-	let f;
-	while (f = components.pop()) {
-		if (f.componentDidMount !== undefined) f.componentDidMount();
+	// back refs and events for component object
+	const component = components[components.length - 1];
+	if (component !== undefined) {
+		component.node = element;
+		component.parentNode = parentNode;
+		if (component.componentDidMount !== undefined) component.componentDidMount();
 	}
 }
+render.key = 0; // key for each instance of a Component
 
 export {
 	createElement,
