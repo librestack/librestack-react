@@ -24,17 +24,17 @@ class Component {
 	forceUpdate = () => {};
 
 	constructor(props?: any) {
-		console.log(`${this.constructor.name} created with key=${this.key}`);
+		console.log(`${(this as any).constructor.name} created with key=${this.key}`);
 	}
 
 	componentDidMount = () => {
-		console.log(`${this.constructor.name}.componentDidMount()`);
+		console.log(`${(this as any).constructor.name}.componentDidMount()`);
 	}
 
 	render () {}
 
 	setState = () => {
-		console.log(`${this.constructor.name}.setState()`);
+		console.log(`${(this as any).constructor.name}.setState()`);
 		if (this.render) render(this.render(), this.parentNode);
 	};
 

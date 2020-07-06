@@ -1,6 +1,6 @@
 {
   "name": "@librestack/react",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Build vanilla.js applications with Typescript and JSX (TSX)",
   "main": "index.ts",
   "scripts": {
