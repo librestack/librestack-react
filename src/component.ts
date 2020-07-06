@@ -6,12 +6,15 @@
 import { render } from './jsx';
 
 class Component {
+	key = render.key++;
 	tagName = 'div';
 	classList: string[] = [];
 	children: any[] = [];
 	componentId: string|undefined;
+	node: HTMLElement|undefined;
 	parentNode: HTMLElement|undefined;
-	unsubscribe = () => {};
+	store: undefined;
+	unsubscribe: undefined;
 
 	// react requirements:
 	context = '';
@@ -20,13 +23,18 @@ class Component {
 	refs = {};
 	forceUpdate = () => {};
 
-	constructor () {
-		console.log(`${this.constructor.name} created`);
+	constructor(props?: any) {
+		console.log(`${this.constructor.name} created with key=${this.key}`);
+	}
+
+	componentDidMount = () => {
+		console.log(`${this.constructor.name}.componentDidMount()`);
 	}
 
 	render () {}
 
 	setState = () => {
+		console.log(`${this.constructor.name}.setState()`);
 		if (this.render) render(this.render(), this.parentNode);
 	};
 
